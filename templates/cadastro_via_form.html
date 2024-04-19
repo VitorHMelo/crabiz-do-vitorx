@@ -1,0 +1,28 @@
+<!-- cadastro.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="/static/style-login.css">
+</head>
+<body>
+    <div class="cabeca">
+        <p class="nigga">niggazap</p>
+    </div>
+    <div class="inputs2">
+        <h2>Cadastro</h2>
+        <form action="/cadastro_via_form" method="post">
+            <label for="nome">Nome:</label>
+            <input class="v1" type="text" id="nome" name="nome"><br><br>
+            <label for="telefone">Telefone:</label>
+            <input class="v1" type="text" id="telefone" name="telefone"><br><br>
+            <label for="senha">Password:</label>
+            <input class="v1" type="password" id="senha" name="senha"><br><br>
+            <input class="button" type="submit" value="Cadastrar">
+        </form>
+        <p>Já tem uma conta? <a href="/login">Faça login aqui</a>.</p>
+    </div>
+</body>
+</html>

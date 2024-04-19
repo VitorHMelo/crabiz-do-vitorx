@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- IMPORTANTO JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <title>niggazap</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        body{
+            background-color: black;
+            color: white;
+        }
+        .conversa{
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(78, 78, 78);
+            width: 500px;
+            height: 400px;
+            margin: 15px;
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        .conversa #box-mensagens{
+            background-color: rgb(255, 0, 0);
+            width: auto;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 25%;
+            border-radius: 10px;
+            
+            
+        }
+
+        .conversa .inputs{
+            display: flex;
+            align-items: flex-end;
+            height: 20px;
+        }
+        .top-bar{
+            width: 100%;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .niggazap{
+            width: 140px;
+            display: flex;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 30px;
+        }
+        #usuario{
+            width: 480px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="top-bar">
+        <h1 class="niggazap">NIGGAZAP</h1> 
+    </div>
+
+    <div class="conversa">
+        
+        <label for="usuario">
+            <select name="usuario" id="usuario">
+                <option value="telefone">Nome</option>
+            </select>
+        </label>
+        <div class="inputs">
+            <div class="mensagens">
+            
+            </div>
+                
+            
+        </div>
+
+        <div id="box-mensagens">
+            
+        </div>
+        <div id="input-container">
+            <div style="width: 10px;"></div>
+                
+            <label for="mensagem">Digite a mensagem:<input type="text" id="mensagem" name="mensagem" required></label>
+            <button id="enviaMsg" onclick="enviarMensagem()"> > </button>
+        </div>
+    </div>
+    
+
+    <script type="text/javascript">
+
+        /* FUNÇÃO QUE SOLICITA OS USUÁRIOS CADASTRADOS E INCLUI NO CAMPO SELECT */
+        function solicita_usuarios(){
+
+            /* Montando a solicitação AJAX requisitando os contatos */
+            $.ajax({
+                url: "/retorna_usuarios",
+                type: "GET",
+                success: function(usuarios){
+                    for(let i =0; i < usuarios.length; i++){
+                        let texto_html = '<option value="'+usuarios[i]['telefone']+'">'+usuarios[i]['nome']+'</option>'
+                        $('#usuario').append(texto_html)
+                    }
+                },
+                error: function(){
+                    alert("Erro ao recuperar os contatos!")
+                }
+            })
+        }
+
+        /* EXECUTA A FUNÇÃO DE solicita_usuarios ASSIM QUE A PÁGINA É ABERTA */
+        $(document).ready(solicita_usuarios())
+
+    </script>
+
+    <script type="text/javascript">
+        function mostraMensagens(){
+            $("#box-mensagens").empty()
+            $.ajax({
+                
+                url:"/get/mensagens/"+$("#usuario").val(),
+                type: "GET",
+                success: function (mensagens) {
+                    for(let i=0; i < mensagens.length; i++){
+                        tag = "<p>"+mensagens[i]["mensagem"]+"</p>"
+                        
+                        $("#box-mensagens").append(tag)
+                    }
+                }
+            })
+        }
+        setInterval(mostraMensagens, 5500);
+
+    </script>
+
+    <script type="text/javascript">
+        function enviarMensagem() {
+            var dados = {
+                destinatario: $("#usuario").val(),
+                mensagem: $("#mensagem").val()
+            };
+
+            $.ajax({
+                url: "/enviar_mensagem",
+                type: "POST",
+                data: JSON.stringify(dados),
+                contentType: "application/json",
+                success: function() {
+                    // Ação de sucesso
+                    alert("Mensagem enviada com sucesso");
+                },
+                error: function() {
+                    // Ação de erro
+                    alert("Erro ao enviar mensagem");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
